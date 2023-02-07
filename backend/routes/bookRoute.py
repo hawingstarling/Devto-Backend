@@ -1,8 +1,12 @@
-from flask import Blueprint
+from flask import Blueprint,request
 
 bookbp = Blueprint('book', __name__)
 
 
-@bookbp.route('/', methods=['POST'])
+@bookbp.route('/getall', methods=['GET'])
 def index():
     return "Book api"
+
+@bookbp.route("/insert_new_book", methods=['POST'])
+def insertNew():
+    return "Insert New book"
