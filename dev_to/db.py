@@ -30,7 +30,6 @@ def get_user(id):
         ]
 
         user = db.user.aggregate(pipeline).next()
-        print('user: ', user)
         return user
     except (StopIteration) as _:
         return None
@@ -41,9 +40,52 @@ def get_users():
     users = db.user.find({})
     return users
 
-def update_user():
-    response = db.user.update_one({
-        "username": "username is updated"
-    })
+def update_user(id, username):
+    response = db.user.update_one(
+        { "_id": ObjectId(id) },
+        { "$set": { "username": username } }
+    )
+
     return response
   
+def delete_user(id):
+    response = db.user.delete_one({ "_id": ObjectId(id) })
+    return response
+
+def get_acticles():
+    articles = db.article.find({})
+    return articles
+
+def get_article(id):
+    try:
+        pipeline = [
+            {
+                "$match": {
+                    "_id": ObjectId(id)
+                }
+            }
+        ]
+
+        article = db.article.aggregate(pipeline).next()
+        return article
+    except (StopIteration) as _:
+        return None
+    except Exception as e:
+        return {}
+
+def update_article(id, title, body_markdown, cover_image):
+    response = db.article.update_one(
+        { "_id": ObjectId(id) },
+        { "$set": { 
+                "title": title, 
+                "body_markdown": body_markdown ,
+                "cover_image": cover_image
+            } 
+        }
+    )
+
+    return response
+  
+def delete_article(id):
+    response = db.article.delete_one({ "_id": ObjectId(id) })
+    return response

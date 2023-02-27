@@ -1,20 +1,18 @@
 import configparser
+from flask_cors import CORS
 from flask import Flask, request, jsonify
-# Import lib to load variable env 
-# from dotenv import load_dotenv
 import os
-from dev_to.api import users
-
+from dev_to.api import articles, users, comments
 from flask_pymongo import PyMongo
-
 from dev_to.db import get_user
-# load_dotenv()
 
 app = Flask(__name__)
-# app.config['MONGO_URI'] = "mongodb+srv://devto:YOI7852j4JgvQmS9@cluster0.w8qa7p4.mongodb.net/devto?retryWrites=true&w=majority"
-# mongo = PyMongo(app)
-# db = mongo.db
+
+CORS(app, origins=["http://localhost:3000"])
+
 app.register_blueprint(users.users_api_v1, url_prefix="/api/v1") 
+app.register_blueprint(articles.articles_api_v1, url_prefix="/api/v1")
+app.register_blueprint(comments.comment_api_v1, url_prefix="/api/v1")
 
 @app.route('/')
 def index():

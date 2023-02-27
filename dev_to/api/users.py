@@ -3,7 +3,9 @@ from flask import Blueprint, Response, jsonify, make_response
 from matplotlib.font_manager import json_dump, json_load
 from bson import json_util
 from traitlets import default
-from . import db, get_user, get_users, update_user
+
+from dev_to.db import delete_user
+from . import db, get_user, get_users, update_user, delete_user
 
 users_api_v1 = Blueprint('user_api_v1', __name__)
 
@@ -26,7 +28,7 @@ def create_new_user():
     db.user.insert_one(user_schema)
     return {
         'state': 'success',
-        'status': 404
+        'status': 200
     }
 
 @users_api_v1.route('/user/<id>', methods=['GET'])
@@ -42,7 +44,7 @@ def get_user_by_id(id):
         }), 400
     else: 
         return make_response(json_util.dumps({
-            "user": user
+            'user': user
         }), HTTPStatus.OK)
 
 def obj_dict(obj):
@@ -52,7 +54,7 @@ def obj_dict(obj):
 def get_all_users():
 
     return make_response(json_util.dumps({
-        "users": get_users()
+        'users': get_users()
     }, default=obj_dict), HTTPStatus.OK)
 
     # --> Alternative
@@ -62,7 +64,17 @@ def get_all_users():
     #     mimetype='application/json'
     # )
 
-@users_api_v1.route('/update_user', method=['PUT'])
-def api_update_user():
-    update_user()
+@users_api_v1.route('/update_user/<id>', methods=['PUT'])
+def api_update_user(id):
+    update_user(id, 'dinhthanhtien1')
+    return {
+        'status': 'successfull'
+    }
 
+
+@users_api_v1.route('/delete_user/<id>', methods=['DELETE'])
+def api_delete_user(id):
+    delete_user(id)
+    return {
+        'status': 'successfull'
+    }
