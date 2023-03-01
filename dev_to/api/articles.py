@@ -12,27 +12,23 @@ articles_api_v1 = Blueprint("articles_api_v1", __name__)
 def index():
     return "api/v1 routes articles"
 
-@articles_api_v1.route("/articles", methods=['POST'])
+@articles_api_v1.route("/createArticle", methods=['POST'])
 def api_articles():
     post_article = request.get_json()
     pipeline = [
         {
             "$match": {
-                "_id": ObjectId(post_article.get('user'))
+                "_id": ObjectId(post_article.get('userId'))
             }
         }
     ]
     article_schema = {
         "title": post_article.get('title'),
         "published": True,
-        "body_markdown": post_article.get('body_markdown'),
-        "slug": post_article.get('slug'),
-        "path": post_article.get('path'),
-        "url": "",
-        "body_html": "",
+        "body": post_article.get('body'),
         "comments_count": 0,
-        "likes": [db.user.aggregate(pipeline).next()],
-        "dislikes": [db.user.aggregate(pipeline).next()],
+        "likes": [],
+        "bookmarks": [],
         "created_at": datetime.now(),
         "edited_at": None,
         "cover_image": post_article.get('cover_image'),
@@ -67,7 +63,9 @@ def get_article(id):
 
 @articles_api_v1.route('/updateArticle/<id>', methods=['PUT'])
 def api_update_article(id):
-    update_article(id, 'titleUpdate', '', '')
+    post_data = request.get_json()
+
+    update_article(id, post_data.get('title'), post_data.get('body'), post_data.get('cover_image'), datetime.now())
     return {
         'status': 'successfull'
     }
@@ -79,11 +77,74 @@ def api_delete_article(id):
         'status': 'successfull'
     }
 
-@articles_api_v1.route('/likePost/<id>')
-def likePost(id, userId):
+@articles_api_v1.route('/likeArticle/<id>', methods=['PUT'])
+def likeArticle(id):
+    pipeline = [
+        {
+            "$match": {
+                "_id": ObjectId("63fb24f7912200a264d276b8")
+            }
+        }
+    ]
     db.article.find_one_and_update(
-        id,
-        { "$addToSet": { "likes":  userId } },
+        { "_id": ObjectId(id) },
+        { "$addToSet": { "likes": db.user.aggregate(pipeline).next() } },
         { "new": True }
     )
-    
+    return "ok"
+
+@articles_api_v1.route('/unlikeArticle/<id>', methods=['PUT'])
+def unlikeArticle(id):
+    pipeline = [
+        {
+            "$match": {
+                "_id": ObjectId("63fb24f7912200a264d276b8")
+            }
+        }
+    ]
+    db.article.find_one_and_update(
+        { "_id": ObjectId(id) },
+        { "$pull": { "likes": db.user.aggregate(pipeline).next() } },
+        { "new": True }
+    )
+    return "ok"
+
+@articles_api_v1.route('/bookmarkArticle/<id>', methods=['PUT'])
+def bookmarkArticle(id):
+    pipeline = [
+        {
+            "$match": {
+                "_id": ObjectId("63fb24f7912200a264d276b8")
+            }
+        }
+    ]
+    db.article.find_one_and_update(
+        { "_id": ObjectId(id) },
+        { "$addToSet": { "bookmarks": db.user.aggregate(pipeline).next() } },
+        { "new": True }
+    )
+    return "ok"
+
+@articles_api_v1.route('/unbookmarkArticle/<id>', methods=['PUT'])
+def unbookmarkArticle(id):
+    pipeline = [
+        {
+            "$match": {
+                "_id": ObjectId("63fb24f7912200a264d276b8")
+            }
+        }
+    ]
+    db.article.find_one_and_update(
+        { "_id": ObjectId(id) },
+        { "$pull": { "bookmarks": db.user.aggregate(pipeline).next() } },
+        { "new": True }
+    )
+    return "ok"
+
+@articles_api_v1.route('/getBookmark', methods=['GET'])
+def getBookmark(userId):
+
+    articlesBookmark = db.article.find({ "bookmarks": userId })
+    return make_response(json_util.dumps({
+        'articlesBookmark': articlesBookmark
+    }), HTTPStatus.OK)

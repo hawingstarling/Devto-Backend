@@ -73,13 +73,14 @@ def get_article(id):
     except Exception as e:
         return {}
 
-def update_article(id, title, body_markdown, cover_image):
+def update_article(id, title, body_markdown, cover_image, edited_at):
     response = db.article.update_one(
         { "_id": ObjectId(id) },
         { "$set": { 
                 "title": title, 
-                "body_markdown": body_markdown ,
-                "cover_image": cover_image
+                "body": body_markdown ,
+                "cover_image": cover_image,
+                "edited_at": edited_at
             } 
         }
     )
@@ -88,4 +89,37 @@ def update_article(id, title, body_markdown, cover_image):
   
 def delete_article(id):
     response = db.article.delete_one({ "_id": ObjectId(id) })
+    return response
+
+def get_comment(id):
+    try:
+        pipeline = [
+            {
+                "$match": {
+                    "_id": ObjectId(id)
+                }
+            }
+        ]
+
+        comment = db.comment.aggregate(pipeline).next()
+        return comment
+    except (StopIteration) as _:
+        return None
+    except Exception as e:
+        return {}
+
+def get_comments():
+    comments = db.comment.find({})
+    return comments
+
+def update_comment(id, body):
+    response = db.comment.update_one(
+        { "_id": ObjectId(id) },
+        { "$set": { "body": body } }
+    )
+
+    return response
+  
+def delete_comment(id):
+    response = db.comment.delete_one({ "_id": ObjectId(id) })
     return response
