@@ -79,10 +79,11 @@ def api_delete_article(id):
 
 @articles_api_v1.route('/likeArticle/<id>', methods=['PUT'])
 def likeArticle(id):
+    post_data = request.json()
     pipeline = [
         {
             "$match": {
-                "_id": ObjectId("63fb24f7912200a264d276b8")
+                "_id": ObjectId(post_data.get('userId'))
             }
         }
     ]
@@ -95,10 +96,11 @@ def likeArticle(id):
 
 @articles_api_v1.route('/unlikeArticle/<id>', methods=['PUT'])
 def unlikeArticle(id):
+    post_data = request.json()
     pipeline = [
         {
             "$match": {
-                "_id": ObjectId("63fb24f7912200a264d276b8")
+                "_id": ObjectId(post_data.get('userId'))
             }
         }
     ]
@@ -111,10 +113,11 @@ def unlikeArticle(id):
 
 @articles_api_v1.route('/bookmarkArticle/<id>', methods=['PUT'])
 def bookmarkArticle(id):
+    post_data = request.json()
     pipeline = [
         {
             "$match": {
-                "_id": ObjectId("63fb24f7912200a264d276b8")
+                "_id": ObjectId(post_data.get('userId'))
             }
         }
     ]
@@ -127,10 +130,11 @@ def bookmarkArticle(id):
 
 @articles_api_v1.route('/unbookmarkArticle/<id>', methods=['PUT'])
 def unbookmarkArticle(id):
+    post_data = request.json()
     pipeline = [
         {
             "$match": {
-                "_id": ObjectId("63fb24f7912200a264d276b8")
+                "_id": ObjectId(post_data.get('userId'))
             }
         }
     ]

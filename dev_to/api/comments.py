@@ -24,7 +24,6 @@ def api_comments():
 
     # Receive request from a type json
     post_data = request.get_json()
-
     # Article match id pipeline
     pipeline = [
         {
@@ -34,21 +33,21 @@ def api_comments():
         }
     ]
 
-    pipelineParentID = [
-        {
-            "$match": {
-                "parent_id": ObjectId(post_data.get('_idParent'))
-            }
-        }
-    ]
+    # pipelineUserId = [
+    #     {
+    #         "$match": {
+    #             "parent_id": ObjectId(post_data.get('userId'))
+    #         }
+    #     }
+    # ]
 
     # Schema comment
     comments_schema = {
         'date': datetime.now(),
         'body': post_data.get('body'),
-        'parent_post': db.article.aggregate(pipeline).next(),
-        'parent_id': ObjectId(post_data.get('_idParent')) if post_data.get('_idParent') != None else {},
-        'author': {},
+        'parent_post': ObjectId(post_data.get('_idPost')),
+        'parent_id': ObjectId(post_data.get('_idParent')) if post_data.get('_idParent') != "" else "",
+        'author': ObjectId(post_data.get('userId')),
         'likes': [],
         'replies': []
     }
@@ -56,11 +55,12 @@ def api_comments():
     # Insert comments_schema to MongoDB
     commentId = db.comment.insert(comments_schema)
 
-    db.comment.find_one_and_update(
-        { "_id": ObjectId(post_data.get('_idParent')) },
-        { "$addToSet": { "replies": ObjectId(commentId) } },
-        { "new": True }
-    )
+    if (post_data.get('_idParent') != ""):
+        db.comment.find_one_and_update(
+            { "_id": ObjectId(post_data.get('_idParent')) },
+            { "$addToSet": { "replies": ObjectId(commentId) } },
+            { "new": True }
+        )
 
     return str(commentId)
 
