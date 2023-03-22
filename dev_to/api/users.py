@@ -3,7 +3,7 @@ from flask import Blueprint, Response, jsonify, make_response
 from matplotlib.font_manager import json_dump, json_load
 from bson import json_util
 
-from dev_to.db import delete_user
+from . import delete_user
 from . import db, get_user, get_users, update_user, delete_user
 
 users_api_v1 = Blueprint('user_api_v1', __name__)
