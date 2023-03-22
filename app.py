@@ -27,7 +27,6 @@ config.read(os.path.abspath(os.path.join('.ini')))
 if __name__ == "__main__":
     app.config['DEBUG'] = True
     # app.config['MONGO_URI'] = "mongodb+srv://devto:YOI7852j4JgvQmS9@cluster0.w8qa7p4.mongodb.net/devto?retryWrites=true&w=majority"
-    app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
+    app.config['MONGO_URI'] = os.getenv('MONGO_URI')
     # app.config['MONGO_URI'] = config['PROD']['DB_URI']
-    mongo = PyMongo(app)
     app.run()
