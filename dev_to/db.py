@@ -2,7 +2,13 @@ from flask import current_app, g, Flask
 from flask_pymongo import PyMongo
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-from ..app import db
+from flask_mongoengine import MongoEngine
+
+db = MongoEngine()
+
+def initialize_db(app):
+    db.init_app(app)
+
 # def get_db():
 #     """
 #     Configuration method to return db instance

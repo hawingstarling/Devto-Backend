@@ -1,7 +1,7 @@
 from datetime import datetime
 from http import HTTPStatus
 from flask import Blueprint, jsonify, make_response, request
-from . import db, get_acticles, get_article, update_article, delete_article
+from . import get_acticles, get_article, update_article, delete_article
 from bson import json_util
 from bson.objectid import ObjectId
 from .utils.obj_dict import obj_dict
