@@ -1,5 +1,6 @@
 import os
 import configparser
+from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_pymongo import PyMongo
 from dev_to.db import get_user
@@ -14,6 +15,8 @@ app.register_blueprint(users.users_api_v1, url_prefix="/api/v1")
 app.register_blueprint(articles.articles_api_v1, url_prefix="/api/v1")
 app.register_blueprint(comments.comment_api_v1, url_prefix="/api/v1")
 app.register_blueprint(notifications.notification_api_v1, url_prefix="/api/v1")
+
+load_dotenv()
 
 @app.route('/')
 def index():
