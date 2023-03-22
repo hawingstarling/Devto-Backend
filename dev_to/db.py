@@ -1,5 +1,4 @@
 from flask import current_app, g, Flask
-from jupyter_client import client
 from flask_pymongo import PyMongo
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId

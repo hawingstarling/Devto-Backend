@@ -33,14 +33,6 @@ def api_comments():
         }
     ]
 
-    # pipelineUserId = [
-    #     {
-    #         "$match": {
-    #             "parent_id": ObjectId(post_data.get('userId'))
-    #         }
-    #     }
-    # ]
-
     # Schema comment
     comments_schema = {
         'date': datetime.now(),
