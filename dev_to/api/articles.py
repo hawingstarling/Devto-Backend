@@ -42,7 +42,7 @@ def api_articles():
 @articles_api_v1.route('/getAllArticles', methods=['GET'])
 def get_articles():
     return make_response(json_util.dumps({
-        'users': get_acticles()
+        'articles': get_acticles()
     }, default=obj_dict), HTTPStatus.OK)
 
 @articles_api_v1.route('/getArticle/<id>', methods=['GET'])

@@ -2,24 +2,19 @@ from flask import current_app, g, Flask
 from flask_pymongo import PyMongo
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-from flask_mongoengine import MongoEngine
+from flask_pymongo import PyMongo
 
-db = MongoEngine()
+def get_db():
+    """
+    Configuration method to return db instance
+    """
+    db = getattr(g, "_database", None)
 
-def initialize_db(app):
-    db.init_app(app)
+    if db is None:
+        db = g._database = PyMongo(current_app).db
+    return db
 
-# def get_db():
-#     """
-#     Configuration method to return db instance
-#     """
-#     db = getattr(g, "_database", None)
-
-#     if db is None:
-#         db = g._database = PyMongo(current_app).db
-#     return db
-
-# db = LocalProxy(get_db)
+db = LocalProxy(get_db)
 
 # $match: Chọn document mong muốn (_id) để truy vấn
 # aggregate: truy vấn nâng cao đưa vào pipeline
