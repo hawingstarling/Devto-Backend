@@ -1,6 +1,5 @@
 from datetime import datetime
 from http import HTTPStatus
-import json
 from flask import Blueprint, jsonify, make_response, request
 from bson import json_util
 from . import db, get_comment, get_comments, update_comment, delete_comment

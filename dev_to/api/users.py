@@ -2,7 +2,6 @@ from http import HTTPStatus
 from flask import Blueprint, Response, jsonify, make_response
 from matplotlib.font_manager import json_dump, json_load
 from bson import json_util
-from traitlets import default
 
 from dev_to.db import delete_user
 from . import db, get_user, get_users, update_user, delete_user
