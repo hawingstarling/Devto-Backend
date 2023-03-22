@@ -22,10 +22,10 @@ load_dotenv()
 def index():
     return 'Welcome to the CRUD APIs'
 
-config = configparser.ConfigParser()
+# config = configparser.ConfigParser()
 
 # path -> ...\Library_Manage\backend\.ini
-config.read(os.path.abspath(os.path.join('.ini')))
+# config.read(os.path.abspath(os.path.join('.ini')))
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True
