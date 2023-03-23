@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 from dev_to.api import articles, users, comments, notifications
-
+from config import MongoDB 
 app = Flask(__name__)
 CORS(app, resources={r"/*":{"origins":"*"}})
 
@@ -28,5 +28,6 @@ def index():
 if __name__ == "__main__":
     app.config['DEBUG'] = True
     # app.config['MONGO_URI'] = "mongodb+srv://devto:YOI7852j4JgvQmS9@cluster0.w8qa7p4.mongodb.net/devto?retryWrites=true&w=majority"
-    app.config['MONGO_URI'] = os.environ.get('MONGODB_URI')
+    # app.config['MONGO_URI'] = os.environ.get('MONGODB_URI')
+    app.config.from_object(MongoDB)
     app.run()
