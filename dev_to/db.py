@@ -10,6 +10,8 @@ def get_db():
     """
     db = getattr(g, "_database", None)
 
+    current_app.config['MONGO_URI'] = "mongodb+srv://devto:YOI7852j4JgvQmS9@cluster0.w8qa7p4.mongodb.net/devto?retryWrites=true&w=majority"
+    
     if db is None:
         db = g._database = PyMongo(current_app).cx['devto']
     return db
