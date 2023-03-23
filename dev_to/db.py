@@ -11,7 +11,7 @@ def get_db():
     db = getattr(g, "_database", None)
 
     if db is None:
-        db = g._database = PyMongo(current_app).db
+        db = g._database = PyMongo(current_app).cx['devto']
     return db
 
 db = LocalProxy(get_db)
