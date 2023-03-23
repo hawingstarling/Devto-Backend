@@ -16,6 +16,7 @@ def get_db():
 
 db = LocalProxy(get_db)
 
+
 # $match: Chọn document mong muốn (_id) để truy vấn
 # aggregate: truy vấn nâng cao đưa vào pipeline
 # pipeline: $match -> $group -> . . . -> tuần tự theo đường ống
