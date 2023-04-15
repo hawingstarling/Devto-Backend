@@ -10,7 +10,7 @@ CORS(app, resources={r"/*":{"origins":"*"}})
 
 # Register blueprint to seperate module
 app.register_blueprint(users.users_api_v1, url_prefix="/api/v1") 
-app.register_blueprint(articles.articles_api_v1, url_prefix="/api/v1/articles")
+app.register_blueprint(articles.articles_api_v1, url_prefix="/api/v1/")
 app.register_blueprint(comments.comment_api_v1, url_prefix="/api/v1")
 app.register_blueprint(notifications.notification_api_v1, url_prefix="/api/v1")
 
@@ -30,7 +30,4 @@ if __name__ == "__main__":
     app.config['DEBUG'] = True
     # app.config['MONGO_URI'] = "mongodb+srv://devto:YOI7852j4JgvQmS9@cluster0.w8qa7p4.mongodb.net/devto?retryWrites=true&w=majority"
     app.config['MONGO_URI'] = os.environ.get('MONGODB_URI')
-
-    notification = Notification()
-    notification.SendToToken('e7Zvt6hoHl5gv2fJ2xnidT:APA91bHnSuIBfuI4INi1hyaX2OA6Na-Oxf_cPgMTZY1zpW5W9xIf5X2gT3KO31r0tzBMzV1pVuswi4PQZ4mrfbbejIxAYbwOnGbbikIWynj2-4yGsv2MZtxj4HsTHj1pxKfh__RQCrE8', 'It title', 'It body')
     app.run()
