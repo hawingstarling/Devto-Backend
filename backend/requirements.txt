@@ -1,5 +1,0 @@
-Flask
-pymongo
-Flask-PyMongo
-mongokit
-Flask-Cors
