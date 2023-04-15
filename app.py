@@ -1,7 +1,7 @@
 import os
 import configparser
 from dotenv import load_dotenv
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify
 from dev_to.api import articles, users, comments, notifications
 from dev_to.services.Notifications import Notification
@@ -16,6 +16,7 @@ app.register_blueprint(notifications.notification_api_v1, url_prefix="/api/v1")
 
 load_dotenv()
 
+@cross_origin
 @app.route('/')
 def index():
     return 'Welcome to the CRUD APIs'
