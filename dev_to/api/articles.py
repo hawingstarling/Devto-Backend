@@ -74,16 +74,16 @@ def api_delete_article(id):
 @articles_api_v1.route('/likeArticle/<id>', methods=['PUT'])
 def likeArticle(id):
     post_data = request.json()
-    pipeline = [
-        {
-            "$match": {
-                "_id": ObjectId(post_data.get('userId'))
-            }
-        }
-    ]
+    # pipeline = [
+    #     {
+    #         "$match": {
+    #             "_id": ObjectId(post_data.get('userId'))
+    #         }
+    #     }
+    # ]
     db.article.find_one_and_update(
         { "_id": ObjectId(id) },
-        { "$addToSet": { "likes": db.user.aggregate(pipeline).next() } },
+        { "$addToSet": { "likes": ObjectId(post_data.get('userId')) } },
         { "new": True }
     )
     return "ok"
@@ -91,16 +91,16 @@ def likeArticle(id):
 @articles_api_v1.route('/unlikeArticle/<id>', methods=['PUT'])
 def unlikeArticle(id):
     post_data = request.json()
-    pipeline = [
-        {
-            "$match": {
-                "_id": ObjectId(post_data.get('userId'))
-            }
-        }
-    ]
+    # pipeline = [
+    #     {
+    #         "$match": {
+    #             "_id": ObjectId(post_data.get('userId'))
+    #         }
+    #     }
+    # ]
     db.article.find_one_and_update(
         { "_id": ObjectId(id) },
-        { "$pull": { "likes": db.user.aggregate(pipeline).next() } },
+        { "$pull": { "likes": ObjectId(post_data.get('userId')) } },
         { "new": True }
     )
     return "ok"
@@ -108,16 +108,16 @@ def unlikeArticle(id):
 @articles_api_v1.route('/bookmarkArticle/<id>', methods=['PUT'])
 def bookmarkArticle(id):
     post_data = request.json()
-    pipeline = [
-        {
-            "$match": {
-                "_id": ObjectId(post_data.get('userId'))
-            }
-        }
-    ]
+    # pipeline = [
+    #     {
+    #         "$match": {
+    #             "_id": ObjectId(post_data.get('userId'))
+    #         }
+    #     }
+    # ]
     db.article.find_one_and_update(
         { "_id": ObjectId(id) },
-        { "$addToSet": { "bookmarks": db.user.aggregate(pipeline).next() } },
+        { "$addToSet": { "bookmarks": ObjectId(post_data.get('userId')) } },
         { "new": True }
     )
     return "ok"
@@ -125,16 +125,16 @@ def bookmarkArticle(id):
 @articles_api_v1.route('/unbookmarkArticle/<id>', methods=['PUT'])
 def unbookmarkArticle(id):
     post_data = request.json()
-    pipeline = [
-        {
-            "$match": {
-                "_id": ObjectId(post_data.get('userId'))
-            }
-        }
-    ]
+    # pipeline = [
+    #     {
+    #         "$match": {
+    #             "_id": ObjectId(post_data.get('userId'))
+    #         }
+    #     }
+    # ]
     db.article.find_one_and_update(
         { "_id": ObjectId(id) },
-        { "$pull": { "bookmarks": db.user.aggregate(pipeline).next() } },
+        { "$pull": { "bookmarks": ObjectId(post_data.get('userId')) } },
         { "new": True }
     )
     return "ok"
