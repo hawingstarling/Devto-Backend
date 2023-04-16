@@ -15,13 +15,7 @@ def index():
 @articles_api_v1.route("/createArticle", methods=['POST'])
 def api_articles():
     post_article = request.get_json()
-    pipeline = [
-        {
-            "$match": {
-                "_id": ObjectId(post_article.get('userId'))
-            }
-        }
-    ]
+    
     article_schema = {
         "title": post_article.get('title'),
         "published": True,
@@ -32,7 +26,7 @@ def api_articles():
         "created_at": datetime.now(),
         "edited_at": None,
         "cover_image": post_article.get('cover_image'),
-        "user": db.user.aggregate(pipeline).next(),
+        "user": ObjectId(post_article.get('userId')),
     }
     db.article.insert_one(article_schema)
     return make_response(json_util.dumps({
