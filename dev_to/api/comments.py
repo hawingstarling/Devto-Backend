@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, make_response, request
 from bson import json_util
 from . import db, get_comment, get_comments, update_comment, delete_comment
 from bson.objectid import ObjectId
+from .utils.obj_dict import obj_dict
 
 comment_api_v1  = Blueprint('comments_api_v1', __name__)
 
@@ -71,6 +72,35 @@ def getCommentById(id):
         return make_response(json_util.dumps({
             'comment': comment
         }), HTTPStatus.OK)
+
+@comment_api_v1.route('/getAllComment', methods=['GET'])
+def get_all_comments():
+    try:
+        # Receive request from a type json
+        post_data = request.get_json()
+        # Article match id pipeline
+
+        if post_data.get('_idParent') != "":
+            comment = db.comment.aggregate([
+                {
+                    "$match": { "parent_post": ObjectId(post_data.get('_idPost')), "parent_id": ObjectId(post_data.get('_idParent')) }
+                }
+            ])
+        else:
+            comment = db.comment.aggregate([
+                {
+                    "$match": { "parent_post": ObjectId(post_data.get('_idPost')), "parent_id": "" }
+                }
+            ])
+
+        return make_response(json_util.dumps({
+            'comment': comment
+        }, default=obj_dict), HTTPStatus.OK)
+
+    except (StopIteration) as _:
+        return None
+    except Exception as e:
+        return {}
 
 @comment_api_v1.route('/updateComment/<id>', methods=['PUT'])
 def api_update_comment(id):
