@@ -56,8 +56,25 @@ def delete_user(id):
     return response
 
 def get_acticles():
-    articles = db.article.find({})
-    return articles
+    # articles = db.article.find({})
+    try:
+        pipeline = [
+            {
+                "$lookup": {
+                    'from': 'users',
+                    'localField': 'user',
+                    'foreignField': '_id',
+                    'as': 'user'
+                }
+            }
+        ]
+
+        article = db.article.aggregate(pipeline)
+        return article
+    except (StopIteration) as _:
+        return None
+    except Exception as e:
+        return {}
 
 def get_article(id):
     try:
