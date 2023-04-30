@@ -76,6 +76,24 @@ def get_article(id):
     except Exception as e:
         return {}
 
+def get_articles_user_id(id):
+    try:
+        pipeline = [
+            {
+                "$match": {
+                    "user": ObjectId(id),
+                }
+            }
+        ]
+
+        article = db.article.aggregate(pipeline)
+        return article
+    except (StopIteration) as _:
+        return None
+    except Exception as e:
+        return {}
+
+
 def update_article(id, title, body_markdown, cover_image, edited_at):
     response = db.article.update_one(
         { "_id": ObjectId(id) },

@@ -2,7 +2,7 @@ from datetime import datetime
 from http import HTTPStatus
 import json
 from flask import Blueprint, jsonify, make_response, request
-from . import db, get_acticles, get_article, update_article, delete_article
+from . import db, get_acticles, get_article, get_articles_user_id, update_article, delete_article
 from bson import json_util
 from bson.objectid import ObjectId
 from .utils.obj_dict import obj_dict
@@ -47,6 +47,24 @@ def get_articles():
     return jsonify(json.loads(json_util.dumps({
         'articles': get_acticles()
     })))
+
+@articles_api_v1.route('/getAllArticlesFromUserById/<id>', methods=['GET'])
+def get_all_articles_from_user_by_id(id):
+
+    article = get_articles_user_id(id)
+
+    if article is None:
+        return jsonify({
+            'error': 'Not found'
+        }), 400
+    elif article == {}:
+        return jsonify({
+            'error': 'Uncaught general exception'
+        }), 400
+    else: 
+        return jsonify(json.loads(json_util.dumps({
+            'article': article
+        })))
 
 @articles_api_v1.route('/getArticle/<id>', methods=['GET'])
 def get_article_by_id(id):
