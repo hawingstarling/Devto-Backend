@@ -1,5 +1,6 @@
 from datetime import datetime
 from http import HTTPStatus
+import json
 from flask import Blueprint, jsonify, make_response, request
 from . import db, get_acticles, get_article, update_article, delete_article
 from bson import json_util
@@ -15,6 +16,14 @@ def index():
 @articles_api_v1.route("/createArticle", methods=['POST'])
 def api_articles():
     post_article = request.get_json()
+
+    pipeline = [
+        {
+            "$match": {
+                "_id": ObjectId(post_article.get('userId'))
+            }
+        }
+    ]
     
     article_schema = {
         "title": post_article.get('title'),
@@ -26,22 +35,24 @@ def api_articles():
         "created_at": datetime.now(),
         "edited_at": None,
         "cover_image": post_article.get('cover_image'),
-        "user": ObjectId(post_article.get('userId')),
+        "user": db.users.aggregate(pipeline).next(),
     }
     db.article.insert_one(article_schema)
-    return make_response(json_util.dumps({
-        'articles': article_schema
-    }), HTTPStatus.OK)
+    return jsonify(json.loads(json_util.dumps({
+        'article': article_schema
+    })))
 
 @articles_api_v1.route('/getAllArticles', methods=['GET'])
 def get_articles():
-    return make_response(json_util.dumps({
+    return jsonify(json.loads(json_util.dumps({
         'articles': get_acticles()
-    }, default=obj_dict), HTTPStatus.OK)
+    })))
 
 @articles_api_v1.route('/getArticle/<id>', methods=['GET'])
-def get_article(id):
+def get_article_by_id(id):
+
     article = get_article(id)
+
     if article is None:
         return jsonify({
             'error': 'Not found'
@@ -51,9 +62,9 @@ def get_article(id):
             'error': 'Uncaught general exception'
         }), 400
     else: 
-        return make_response(json_util.dumps({
+        return jsonify(json.loads(json_util.dumps({
             'article': article
-        }), HTTPStatus.OK)
+        })))
 
 @articles_api_v1.route('/updateArticle/<id>', methods=['PUT'])
 def api_update_article(id):

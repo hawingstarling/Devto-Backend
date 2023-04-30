@@ -1,5 +1,6 @@
 from datetime import datetime
 from http import HTTPStatus
+import json
 from flask import Blueprint, jsonify, make_response, request
 from bson import json_util
 from . import db, get_comment, get_comments, update_comment, delete_comment
@@ -69,9 +70,9 @@ def getCommentById(id):
             'error': 'Uncaught general exception'
         }), 400
     else: 
-        return make_response(json_util.dumps({
+        return jsonify(json.loads(json_util.dumps({
             'comment': comment
-        }), HTTPStatus.OK)
+        })))
 
 @comment_api_v1.route('/getAllComment', methods=['GET'])
 def get_all_comments():
@@ -93,9 +94,9 @@ def get_all_comments():
                 }
             ])
 
-        return make_response(json_util.dumps({
+        return jsonify(json.loads(json_util.dumps({
             'comment': comment
-        }, default=obj_dict), HTTPStatus.OK)
+        })))
 
     except (StopIteration) as _:
         return None
