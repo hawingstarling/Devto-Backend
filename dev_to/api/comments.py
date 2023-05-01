@@ -52,11 +52,13 @@ def api_comments():
     if (post_data.get('_idParent') != ""):
         db.comment.find_one_and_update(
             { "_id": ObjectId(post_data.get('_idParent')) },
-            { "$addToSet": { "replies": ObjectId(commentId) } },
+            { "$addToSet": { "replies": ObjectId(commentId.inserted_id) } },
             { "new": True }
         )
 
-    return str(commentId.inserted_id)
+    return {
+        'state': 'Done'
+    }
 
 @comment_api_v1.route('/getCommentById/<id>', methods=['GET'])
 def getCommentById(id):
