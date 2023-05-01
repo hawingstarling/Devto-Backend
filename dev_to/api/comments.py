@@ -84,13 +84,32 @@ def get_all_comments():
         if post_data.get('_idParent') != "":
             comment = db.comment.aggregate([
                 {
-                    "$match": { "parent_post": ObjectId(post_data.get('_idPost')), "parent_id": ObjectId(post_data.get('_idParent')) }
+                    "$match": { 
+                        "parent_post": ObjectId(post_data.get('_idPost')), 
+                        "parent_id": ObjectId(post_data.get('_idParent')) 
+                    }
+                },
+                {
+                    "$lookup": {
+                        'from': 'users',
+                        'localField': 'author',
+                        'foreignField': '_id',
+                        'as': 'author'
+                    }
                 }
             ])
         else:
             comment = db.comment.aggregate([
                 {
                     "$match": { "parent_post": ObjectId(post_data.get('_idPost')), "parent_id": "" }
+                },
+                {
+                    "$lookup": {
+                        'from': 'users',
+                        'localField': 'author',
+                        'foreignField': '_id',
+                        'as': 'author'
+                    }
                 }
             ])
 
