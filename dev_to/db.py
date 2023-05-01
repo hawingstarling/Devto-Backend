@@ -83,7 +83,15 @@ def get_article(id):
                 "$match": {
                     "_id": ObjectId(id)
                 }
-            }
+            },
+            {
+                "$lookup": {
+                    'from': 'users',
+                    'localField': 'user',
+                    'foreignField': '_id',
+                    'as': 'user'
+                }
+            },
         ]
 
         article = db.article.aggregate(pipeline).next()
