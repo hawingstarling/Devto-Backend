@@ -47,7 +47,7 @@ def api_comments():
     }
 
     # Insert comments_schema to MongoDB
-    commentId = db.comment.insert(comments_schema)
+    commentId = db.comment.insert_one(comments_schema)
 
     if (post_data.get('_idParent') != ""):
         db.comment.find_one_and_update(
@@ -56,7 +56,7 @@ def api_comments():
             { "new": True }
         )
 
-    return str(commentId)
+    return str(commentId.inserted_id)
 
 @comment_api_v1.route('/getCommentById/<id>', methods=['GET'])
 def getCommentById(id):
