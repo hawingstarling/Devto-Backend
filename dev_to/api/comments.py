@@ -76,7 +76,7 @@ def getCommentById(id):
             'comment': comment
         })))
 
-@comment_api_v1.route('/getAllComment', methods=['GET'])
+@comment_api_v1.route('/getAllComment', methods=['POST'])
 def get_all_comments():
     try:
         # Receive request from a type json
