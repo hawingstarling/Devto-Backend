@@ -48,7 +48,7 @@ def get_articles():
         'articles': get_acticles()
     })))
 
-@articles_api_v1.route('/getAllArticlesFromUserById/<id>', methods=['GET'])
+@articles_api_v1.route('/getAllArticlesFromUserById/<id>', methods=['POST'])
 def get_all_articles_from_user_by_id(id):
 
     article = get_articles_user_id(id)
@@ -168,7 +168,7 @@ def unbookmarkArticle(id):
     )
     return "ok"
 
-@articles_api_v1.route('/getBookmark', methods=['GET'])
+@articles_api_v1.route('/getBookmark/<userId>', methods=['GET'])
 def getBookmark(userId):
 
     articlesBookmark = db.article.find({ "bookmarks": userId })
